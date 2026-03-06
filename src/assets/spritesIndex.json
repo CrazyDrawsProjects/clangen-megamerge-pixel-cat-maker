@@ -15695,77 +15695,77 @@
     "yOffset": 700
   },
   "collarsCRIMSONBOWS": {
-    "spritesheet": "collars",
+    "spritesheet": "bows",
     "xOffset": 0,
     "yOffset": 0
   },
   "collarsBLUEBOWS": {
-    "spritesheet": "collars",
+    "spritesheet": "bows",
     "xOffset": 150,
     "yOffset": 0
   },
   "collarsYELLOWBOWS": {
-    "spritesheet": "collars",
+    "spritesheet": "bows",
     "xOffset": 300,
     "yOffset": 0
   },
   "collarsCYANBOWS": {
-    "spritesheet": "collars",
+    "spritesheet": "bows",
     "xOffset": 450,
     "yOffset": 0
   },
   "collarsREDBOWS": {
-    "spritesheet": "collars",
+    "spritesheet": "bows",
     "xOffset": 600,
     "yOffset": 0
   },
   "collarsLIMEBOWS": {
-    "spritesheet": "collars",
+    "spritesheet": "bows",
     "xOffset": 750,
     "yOffset": 0
   },
   "collarsGREENBOWS": {
-    "spritesheet": "collars",
+    "spritesheet": "bows",
     "xOffset": 0,
     "yOffset": 350
   },
   "collarsRAINBOWBOWS": {
-    "spritesheet": "collars",
+    "spritesheet": "bows",
     "xOffset": 150,
     "yOffset": 350
   },
   "collarsBLACKBOWS": {
-    "spritesheet": "collars",
+    "spritesheet": "bows",
     "xOffset": 300,
     "yOffset": 350
   },
   "collarsSPIKESBOWS": {
-    "spritesheet": "collars",
+    "spritesheet": "bows",
     "xOffset": 450,
     "yOffset": 350
   },
   "collarsWHITEBOWS": {
-    "spritesheet": "collars",
+    "spritesheet": "bows",
     "xOffset": 600,
     "yOffset": 350
   },
   "collarsPINKBOWS": {
-    "spritesheet": "collars",
+    "spritesheet": "bows",
     "xOffset": 0,
     "yOffset": 700
   },
   "collarsPURPLEBOWS": {
-    "spritesheet": "collars",
+    "spritesheet": "bows",
     "xOffset": 150,
     "yOffset": 700
   },
   "collarsMULTIBOWS": {
-    "spritesheet": "collars",
+    "spritesheet": "bows",
     "xOffset": 300,
     "yOffset": 700
   },
   "collarsINDIGOBOWS": {
-    "spritesheet": "collars",
+    "spritesheet": "bows",
     "xOffset": 450,
     "yOffset": 700
   },
