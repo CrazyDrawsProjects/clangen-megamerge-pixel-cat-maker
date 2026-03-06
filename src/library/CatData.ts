@@ -199,7 +199,7 @@ const spritesnameToName = {
   merle: "Merle",
   monarch: "Monarch",
   oceloid: "oceloid",
-  pinstripetabby: "pinstripetabby",
+  pinstripetabby: "Pinstripetabby",
   snowflake: "Snowflake",
   dot: "Dot",
   caliisokoke: "Caliisokoke",

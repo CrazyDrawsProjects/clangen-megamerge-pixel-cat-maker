@@ -15324,12 +15324,12 @@
     "xOffset": 150,
     "yOffset": 1050
   },
-  "acc_tail2SEAWEED": {
+  "acc_plant2SEAWEED": {
     "spritesheet": "tail2_accessories",
     "xOffset": 0,
     "yOffset": 0
   },
-  "acc_tail2DAISY CORSAGE": {
+  "acc_plant2DAISY CORSAGE": {
     "spritesheet": "tail2_accessories",
     "xOffset": 150,
     "yOffset": 0
