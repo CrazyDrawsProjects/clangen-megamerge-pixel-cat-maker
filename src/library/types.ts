@@ -12,7 +12,7 @@ type Pelt = {
   vitiligo?: string | undefined;
   eyeColour: string;
   eyeColour2?: string | undefined;
-  scars?: Array<string> | undefined;
+  scars?: Array<list> | undefined;
   tint: string;
   whitePatchesTint: string;
   accessory?: string | undefined;
@@ -35,7 +35,7 @@ type JSONData = {
   tortie_color: string | null;
   skin: string;
   tint: string;
-  scars: string | null;
+  scars: list | null;
   accessory: string | string[] | null;
 };
 
