@@ -1628,3 +1628,4 @@ export {
   generateTortiePattern,
   generateChildPelt,
 };
+}

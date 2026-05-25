@@ -454,3 +454,4 @@ addEventListener("popstate", () => {
 });
 
 applyDataURL();
+}
