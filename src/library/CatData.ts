@@ -283,7 +283,7 @@ class CatData {
       whitePatchesTint: this.whitePatchesTint,
       eyeColour: this.eyeColour,
       eyeColour2: this.eyeColour2 === null ? undefined : this.eyeColour2,
-      whitePatches: this.whitePatches === null ? undefined : this.whitePatches,
+      whitePatches: [],
       points: this.points === null ? undefined : this.points,
       vitiligo: this.vitiligo === null ? undefined : this.vitiligo,
       spritesName: nameToSpritesname[peltName],
@@ -299,6 +299,9 @@ class CatData {
     };
     if (this.scar) {
       pelt["scars"] = [this.scar];
+    }
+    if (this.whitePatches) {
+      pelt["whitePatches"] = [this.whitePatches];
     }
 
     return pelt;
@@ -381,10 +384,7 @@ class CatData {
     catData.tint = pelt.skin;
     catData.eyeColour = pelt.eyeColour;
     catData.eyeColour2 = pelt.eyeColour2 === undefined ? null : pelt.eyeColour2;
-
     catData.whitePatchesTint = pelt.whitePatchesTint;
-    catData.whitePatches =
-      pelt.whitePatches === undefined ? null : pelt.whitePatches;
     catData.points = pelt.points === undefined ? null : pelt.points;
     catData.vitiligo = pelt.vitiligo === undefined ? null : pelt.vitiligo;
 

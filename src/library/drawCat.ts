@@ -195,7 +195,7 @@ async function drawCat(
   if (pelt.whitePatches !== undefined) {
     const offscreen = new OffscreenCanvas(50, 50);
     const offscreenContext = offscreen.getContext("2d");
-    const patches = pelt.whitePatches.split(",");
+    const patches = pelt.whitePatches;
       for (const patch of patches) {
         await drawSprite(`white${patch}`, catSprite, offscreenContext);
       }

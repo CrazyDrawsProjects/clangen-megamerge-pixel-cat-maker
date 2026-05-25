@@ -1192,7 +1192,7 @@ function inheritEyes(parents: Pelt[], child: Pelt) {
 
   // heterochromia!
   var n = 120;
-  const childPatches = child.whitePatches ? child.whitePatches.split(",") : [];
+  const childPatches = child.whitePatches ? child.whitePatches : [];
   if (
     childPatches.some(p => high_white.includes(p) ||
     mostly_white.includes(p) ||
@@ -1267,7 +1267,7 @@ function inheritWhite(
 
     for (const p of parents) {
       if (p.whitePatches) {
-        p.whitePatches.split(",").forEach(wp => parentsWhitePatches.add(wp));
+        p.whitePatches.forEach(wp => parentsWhitePatches.add(wp));
       }
       if (p.points) {
         parentsPoints.push(p.points);
@@ -1295,7 +1295,7 @@ function inheritWhite(
           const idx = Math.floor(Math.random() * possibleArr.length);
           chosen.push(possibleArr.splice(idx, 1)[0]);
         }
-        child.whitePatches = chosen.join(",");
+        child.whitePatches = chosen;
         if (parentsPoints.length > 0 && child.name !== "Tortie") {
           child.points = choice(parentsPoints);
         } else {
@@ -1382,7 +1382,7 @@ function inheritWhite(
     }
   }
 }
-
+}
 // doesn't include pelt length!!!
 function inheritPattern(parents: Pelt[], child: Pelt) {
   const parentPeltColours = new Set<string>();
@@ -1628,4 +1628,3 @@ export {
   generateTortiePattern,
   generateChildPelt,
 };
-}
