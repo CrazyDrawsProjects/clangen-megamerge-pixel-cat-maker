@@ -7,7 +7,7 @@ type Pelt = {
   tortiePattern?: string | undefined;
   tortieColour?: string | undefined;
   spritesName: string;
-  whitePatches?: string | undefined;
+  whitePatches?: Array<string> | undefined;
   points?: string | undefined;
   vitiligo?: string | undefined;
   eyeColour: string;
@@ -25,7 +25,7 @@ type JSONData = {
   eye_colour: string;
   eye_colour2: string | null;
   reverse: boolean;
-  white_patches: string | null;
+  white_patches: string | string[] | null;
   vitiligo: string | null;
   points: string | null;
   white_patches_tint: string;

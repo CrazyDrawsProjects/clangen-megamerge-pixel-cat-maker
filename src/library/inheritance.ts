@@ -1192,16 +1192,18 @@ function inheritEyes(parents: Pelt[], child: Pelt) {
 
   // heterochromia!
   var n = 120;
+  const childPatches = child.whitePatches ? child.whitePatches.split(",") : [];
   if (
-    child.whitePatches &&
-    (high_white.includes(child.whitePatches) ||
-      mostly_white.includes(child.whitePatches) ||
-      child.whitePatches === "FULLWHITE" ||
-      child.whitePatches === "WHITE")
+    childPatches.some(p => high_white.includes(p) ||
+    mostly_white.includes(p) ||
+    p === "FULLWHITE" ||
+    p === "WHITE"
+  )
   ) {
     n -= 90;
   }
-  if (child.whitePatches === "FULLWHITE" || child.colour === "WHITE") {
+  if (childPatches.includes("FULLWHITE") || 
+  child.colour === "WHITE") {
     n -= 10;
   }
 
@@ -1265,7 +1267,7 @@ function inheritWhite(
 
     for (const p of parents) {
       if (p.whitePatches) {
-        parentsWhitePatches.add(p.whitePatches);
+        p.whitePatches.split(",").forEach(wp => parentsWhitePatches.add(wp));
       }
       if (p.points) {
         parentsPoints.push(p.points);
@@ -1285,15 +1287,21 @@ function inheritWhite(
       }
 
       if (possibleWhitePatches.size > 0) {
-        child.whitePatches = choice(Array.from(possibleWhitePatches.values()));
-
+        const chosen = [];
+        const possibleArr = Array.from(possibleWhitePatches.values());
+        const numToInherit = Math.random() <= 0.3 ? 2 : 1;
+        for (let j = 0; j < numToInherit; j++) {
+          if (possibleArr.length === 0) break;
+          const idx = Math.floor(Math.random() * possibleArr.length);
+          chosen.push(possibleArr.splice(idx, 1)[0]);
+        }
+        child.whitePatches = chosen.join(",");
         if (parentsPoints.length > 0 && child.name !== "Tortie") {
           child.points = choice(parentsPoints);
         } else {
           child.points = undefined;
         }
         return;
-      }
     }
 
     var chance: number;
@@ -1353,7 +1361,16 @@ function inheritWhite(
     }
 
     const whitePatchesList = weightedChoice(whiteList, w);
-    child.whitePatches = choice(whitePatchesList);
+    const numPatches = Math.random() <= 0.25 ? 2 : 1;
+    const chosenPatches = [];
+    const tempWhiteList = [...whitePatchesList];
+    for (let j = 0; j < numPatches; j++) {
+      if (tempWhiteList.length === 0) break;
+      const idx = Math.floor(Math.random() * tempWhiteList.length);
+      chosenPatches.push(tempWhiteList.split(idx, 1)[0]); {
+        child.whitePatches = chosenPatches.join(",");
+      }
+    }
 
     if (
       child.points &&

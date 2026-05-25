@@ -506,7 +506,12 @@ class CatData {
     catData.eyeColour2 = data.eye_colour2;
 
     catData.whitePatchesTint = data.white_patches_tint;
-    catData.whitePatches = data.white_patches;
+    if (Array.isArray(data.white_patches)) {
+      catData.whitePatches = data.white_patches.length === 0 ?
+      null : data.white_patches.join(",");
+    } else {
+      catData.whitePatches = data.white_patches;
+    }
     catData.points = data.points;
     catData.vitiligo = data.vitiligo;
     if (Array.isArray(data.accessory)) {

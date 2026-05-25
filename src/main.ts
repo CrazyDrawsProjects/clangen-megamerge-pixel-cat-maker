@@ -103,10 +103,14 @@ function selectByValue(select: HTMLSelectElement, value: string | null, ignoreNu
     }
   }
 
+  const values = select.multiple ? value.split(",") : [value];
   const options = select.options;
   for (var i = 0; i < options.length; i++) {
     const option = options.item(i)!;
-    if (option.value === value) {
+    if (select.multiple) {
+      option.selected = values.includes(option.value);
+    } else {
+      if (option.value === value) {
       select.selectedIndex = i;
     }
   }
