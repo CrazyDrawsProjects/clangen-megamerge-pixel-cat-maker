@@ -1183,27 +1183,27 @@ function capitalize(str: string) {
 function inheritEyes(parents: Pelt[], child: Pelt) {
   const parentEyeColours: string[] = parents.map((v) => v.eyeColour);
 
-  // eyecolour1
-  if (parentEyeColours.length == 0) {
+  if (parentEyeColours.length === 0) {
     child.eyeColour = choice(eye_colours);
   } else {
     child.eyeColour = choice(eye_colours.concat(parentEyeColours));
   }
 
   // heterochromia!
-  var n = 120;
+  let n = 120;
   if (
     child.whitePatches &&
-    child.whitePatches.some(w => [high_white, mostly_white, "FULLWHITE"].includes(w) ||
-    child.colour ==="WHITE")
+    (child.whitePatches.some(w => high_white.includes(w) || mostly_white.includes(w) || w === "FULLWHITE") ||
+    child.colour === "WHITE")
   ) {
     n -= 90;
   }
   if (
-    child.whitePatches && child.whitePatches.includes("FULLWHITE") ||
-    child.colour === "WHITE") {
+    (child.whitePatches && child.whitePatches.includes("FULLWHITE")) ||
+    child.colour === "WHITE"
+  ) {
     n -= 10;
-      }
+  }
 
   for (const parent of parents) {
     if (parent.eyeColour2) {
@@ -1223,23 +1223,29 @@ function inheritEyes(parents: Pelt[], child: Pelt) {
 
     child.eyeColour2 = choice(choice(choiceGroups));
   }
-
-
 }
+
 function inheritWhite(
   parents: Pelt[],
   child: Pelt,
   forceInherit: boolean = false,
 ) {
-  const parentsVitiligo = [];
-  const parentsWhite = [];
+  const parentsVitiligo: string[] = [];
+  const parentsWhite: string[][] = [];
+  const parentsWhitePatches = new Set<string>();
+  const parentsPoints: string[] = [];
 
   for (const p of parents) {
     if (p.vitiligo !== undefined) {
       parentsVitiligo.push(p.vitiligo);
     }
-    if (p.whitePatches !== undefined || p.points !== undefined) {
+    if (p.whitePatches !== undefined) {
       parentsWhite.push(p.whitePatches);
+      // Fix: Add each item from the array to the set individually
+      p.whitePatches.forEach(wp => parentsWhitePatches.add(wp));
+    }
+    if (p.points !== undefined) {
+      parentsPoints.push(p.points);
     }
   }
 
@@ -1248,8 +1254,8 @@ function inheritWhite(
     child.vitiligo = choice(vit);
   }
 
-  const percentagePerParent = Math.floor(94 / parentsWhite.length);
-  var chance = 3;
+  const percentagePerParent = parentsWhite.length > 0 ? Math.floor(94 / parentsWhite.length) : 0;
+  let chance = 3;
   for (const _ of parentsWhite) {
     chance += percentagePerParent;
   }
@@ -1261,19 +1267,7 @@ function inheritWhite(
       child.name = "TwoColour";
     }
 
-    const parentsWhitePatches = new Set<string>();
-    const parentsPoints = [];
-
-    for (const p of parents) {
-      if (p.whitePatches) {
-        parentsWhitePatches.add(p.whitePatches);
-      }
-      if (p.points) {
-        parentsPoints.push(p.points);
-      }
-    }
-  }
-    // direct inheritence
+    // Direct inheritance
     if (parentsWhitePatches.size > 0 && Math.random() <= 1 / 16) {
       const possibleWhitePatches = new Set(parentsWhitePatches);
       if (child.name === "Calico") {
@@ -1298,23 +1292,23 @@ function inheritWhite(
         child.whitePatches = Array.from(chosenWhitePatches.values());
       }
 
-
-        if (parentsPoints.length > 0 && child.name !== "Tortie") {
-          child.points = choice(parentsPoints);
-        } else {
-          child.points = undefined;
-        }
-        return;
+      if (parentsPoints.length > 0 && child.name !== "Tortie") {
+        child.points = choice(parentsPoints);
+      } else {
+        child.points = undefined;
       }
+      return;
     }
 
-    var chance: number;
-    if (parentsPoints) {
-      chance = 10 - parentsPoints.length;
+    // Weighted generation
+    let pointChance: number;
+    if (parentsPoints.length > 0) {
+      pointChance = 10 - parentsPoints.length;
     } else {
-      chance = 40;
+      pointChance = 40;
     }
-    if (child.name !== "Tortie" && Math.random() <= 1 / chance) {
+    
+    if (child.name !== "Tortie" && Math.random() <= 1 / pointChance) {
       child.points = choice(point_markings);
     } else {
       child.points = undefined;
@@ -1327,42 +1321,30 @@ function inheritWhite(
       mostly_white,
       ["FULLWHITE"],
     ];
-    var w = [0, 0, 0, 0, 0];
+
+    let w = [0, 0, 0, 0, 0];
     for (const p of parentsWhitePatches) {
-      var add_weights = [0, 0, 0, 0, 0];
-      if (little_white.includes(p)) {
-        add_weights = [40, 20, 15, 5, 0];
-      } else if (mid_white.includes(p)) {
-        add_weights = [10, 40, 15, 10, 0];
-      } else if (high_white.includes(p)) {
-        add_weights = [15, 20, 40, 10, 1];
-      } else if (mostly_white.includes(p)) {
-        add_weights = [5, 15, 20, 40, 5];
-      } else if (p === "FULLWHITE") {
-        add_weights = [0, 5, 15, 40, 10];
-      }
+      let add_weights = [0, 0, 0, 0, 0];
+      if (little_white.includes(p)) add_weights = [40, 20, 15, 5, 0];
+      else if (mid_white.includes(p)) add_weights = [10, 40, 15, 10, 0];
+      else if (high_white.includes(p)) add_weights = [15, 20, 40, 10, 1];
+      else if (mostly_white.includes(p)) add_weights = [5, 15, 20, 40, 5];
+      else if (p === "FULLWHITE") add_weights = [0, 5, 15, 40, 10];
 
-      for (var i = 0; i < w.length; i++) {
-        w[i] += add_weights[i];
-      }
+      for (let i = 0; i < w.length; i++) w[i] += add_weights[i];
     }
 
-    if (w.every((v) => v === 0)) {
-      // TODO: support null parents
-      w = [50, 5, 0, 0, 0];
-    }
+    if (w.every((v) => v === 0)) w = [50, 5, 0, 0, 0];
 
     if (child.name === "Calico") {
-      var highWhiteWeights = w.slice(3);
+      const highWhiteWeights = w.slice(3);
       w = [0, 0, 0].concat(highWhiteWeights);
     } else if (child.name === "Tortie") {
-      var lowWhiteWeights = w.slice(0, 1);
-      w = lowWhiteWeights.concat([0, 0, 0]);
+      const lowWhiteWeights = w.slice(0, 1);
+      w = lowWhiteWeights.concat([0, 0, 0, 0]);
     }
 
-    if (w.every((v) => v === 0)) {
-      w = [2, 1, 0, 0, 0];
-    }
+    if (w.every((v) => v === 0)) w = [2, 1, 0, 0, 0];
 
     const whitePatchesList = weightedChoice(whiteList, w);
     const chosenWhitePatches = new Set([choice(whitePatchesList)]);
@@ -1380,19 +1362,13 @@ function inheritWhite(
     }
 
     parents.forEach((p) => {
-      if (p) {
-        if (!p.whitePatches || p.whitePatches.length === 0) {
-          n += 1;
-        } else if (p.whitePatches.length >= 2) {
-          n -= 1;
-        }
+      if (p.whitePatches) {
+        if (p.whitePatches.length === 0) n += 1;
+        else if (p.whitePatches.length >= 2) n -= 1;
       }
     });
 
-    if (n < 0) {
-      n = 1;
-    }
-
+    if (n < 0) n = 1;
 
     for (let i = 0; i < 2; i++) {
       if (Math.floor(Math.random() * (n + 1)) === 0) {
@@ -1413,6 +1389,8 @@ function inheritWhite(
     ) {
       child.points = undefined;
     }
+  }
+}
 
 // doesn't include pelt length!!!
 function inheritPattern(parents: Pelt[], child: Pelt) {
