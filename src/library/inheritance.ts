@@ -1658,4 +1658,4 @@ export {
   inheritWhite,
   generateTortiePattern,
   generateChildPelt,
-};
+};}
