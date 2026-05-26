@@ -1225,7 +1225,7 @@ function inheritEyes(parents: Pelt[], child: Pelt) {
   }
 
 
-
+}
 function inheritWhite(
   parents: Pelt[],
   child: Pelt,
@@ -1272,7 +1272,7 @@ function inheritWhite(
         parentsPoints.push(p.points);
       }
     }
-
+  }
     // direct inheritence
     if (parentsWhitePatches.size > 0 && Math.random() <= 1 / 16) {
       const possibleWhitePatches = new Set(parentsWhitePatches);
@@ -1658,4 +1658,4 @@ export {
   inheritWhite,
   generateTortiePattern,
   generateChildPelt,
-};}
+};
