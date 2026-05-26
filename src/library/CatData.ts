@@ -228,7 +228,7 @@ class CatData {
   skinColour: string;
   eyeColour: string;
   eyeColour2: string | null;
-  whitePatches: string[] | null;
+  whitePatches: string[];
   points: string | null;
   whitePatchesTint: string;
   vitiligo: string | null;
@@ -283,7 +283,7 @@ class CatData {
       whitePatchesTint: this.whitePatchesTint,
       eyeColour: this.eyeColour,
       eyeColour2: this.eyeColour2 === null ? undefined : this.eyeColour2,
-      whitePatches: [],
+      whitePatches: this.whitePatches || [],
       points: this.points === null ? undefined : this.points,
       vitiligo: this.vitiligo === null ? undefined : this.vitiligo,
       spritesName: nameToSpritesname[peltName],
@@ -356,7 +356,6 @@ class CatData {
       skinColour: this.skinColour,
       eyeColour: this.eyeColour,
       eyeColour2: this.eyeColour2 === null ? "" : this.eyeColour2,
-      whitePatches: this.whitePatches === null ? "" : this.whitePatches.toString(),
       points: this.points === null ? "" : this.points,
       whitePatchesTint: this.whitePatches === null ? "" : this.whitePatchesTint,
       vitiligo: this.vitiligo === null ? "" : this.vitiligo,
@@ -364,7 +363,9 @@ class CatData {
       scar: this.scar === null ? "" : this.scar,
       version: "v1",
     });
-    this.whitePatches?.forEach(patch => params.append("whitePatches", patch));
+    this.whitePatches?.forEach(patch => {
+      if (patch !== "") params.append("whitePatches", patch)
+    });
     return new URL(`${base}?${params}`);
   }
 
