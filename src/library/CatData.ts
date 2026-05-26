@@ -228,7 +228,7 @@ class CatData {
   skinColour: string;
   eyeColour: string;
   eyeColour2: string | null;
-  whitePatches: string | null;
+  whitePatches: string[] | null;
   points: string | null;
   whitePatchesTint: string;
   vitiligo: string | null;
@@ -254,7 +254,7 @@ class CatData {
     this.eyeColour = "YELLOW";
     this.eyeColour2 = null;
 
-    this.whitePatches = null;
+    this.whitePatches = [];
     this.points = null;
     this.whitePatchesTint = "none";
     this.vitiligo = null;
@@ -301,7 +301,7 @@ class CatData {
       pelt["scars"] = [this.scar];
     }
     if (this.whitePatches) {
-      pelt["whitePatches"] = [this.whitePatches];
+      pelt["whitePatches"];
     }
 
     return pelt;
@@ -356,7 +356,7 @@ class CatData {
       skinColour: this.skinColour,
       eyeColour: this.eyeColour,
       eyeColour2: this.eyeColour2 === null ? "" : this.eyeColour2,
-      whitePatches: this.whitePatches === null ? "" : this.whitePatches,
+      whitePatches: this.whitePatches === null ? "" : this.whitePatches.toString(),
       points: this.points === null ? "" : this.points,
       whitePatchesTint: this.whitePatches === null ? "" : this.whitePatchesTint,
       vitiligo: this.vitiligo === null ? "" : this.vitiligo,
@@ -364,6 +364,7 @@ class CatData {
       scar: this.scar === null ? "" : this.scar,
       version: "v1",
     });
+    this.whitePatches?.forEach(patch => params.append("whitePatches", patch));
     return new URL(`${base}?${params}`);
   }
 
@@ -385,6 +386,7 @@ class CatData {
     catData.eyeColour = pelt.eyeColour;
     catData.eyeColour2 = pelt.eyeColour2 === undefined ? null : pelt.eyeColour2;
     catData.whitePatchesTint = pelt.whitePatchesTint;
+    catData.whitePatches = pelt.whitePatches || [];
     catData.points = pelt.points === undefined ? null : pelt.points;
     catData.vitiligo = pelt.vitiligo === undefined ? null : pelt.vitiligo;
 
@@ -410,7 +412,7 @@ class CatData {
       const vitiligo = params.get("vitiligo");
       const whitePatchesTint = params.get("whitePatchesTint");
       const points = params.get("points");
-      const whitePatches = params.get("whitePatches");
+      const whitePatches = params.getAll("whitePatches").filter(v => v !== "");
       const eyeColour2 = params.get("eyeColour2");
       const eyeColour = params.get("eyeColour");
       const skinColour = params.get("skinColour");
@@ -506,12 +508,11 @@ class CatData {
     catData.eyeColour2 = data.eye_colour2;
 
     catData.whitePatchesTint = data.white_patches_tint;
-    if (Array.isArray(data.white_patches)) {
-      catData.whitePatches = data.white_patches.length === 0 ?
-      null : data.white_patches.join(",");
-    } else {
-      catData.whitePatches = data.white_patches;
-    }
+    const ensureArray = (val: string | string[] | null) => {
+        if (!val) return [];
+        return Array.isArray(val) ? val : [val];
+    };
+    catData.whitePatches = ensureArray(data.white_patches);
     catData.points = data.points;
     catData.vitiligo = data.vitiligo;
     if (Array.isArray(data.accessory)) {

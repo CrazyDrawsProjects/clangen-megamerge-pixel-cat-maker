@@ -12,6 +12,7 @@ function getElementByUniqueClassName(className: string): Element {
 
 var catData: CatData;
 
+
 const catSprite = getElementByUniqueClassName(
   "cat-sprite-img",
 ) as HTMLImageElement;
@@ -94,29 +95,28 @@ const sharecodeTextArea = getElementByUniqueClassName(
   "sharecode",
 ) as HTMLTextAreaElement;
 
-function selectByValue(select: HTMLSelectElement, value: string | null, ignoreNull: boolean) {
-  if (value === null) {
-    if (ignoreNull) {
-      return;
-    } else {
-      value = "";
-    }
+function selectByValue(select: HTMLSelectElement, value: string | string[] | null, ignoreNull: boolean) {
+  if (value === null && !ignoreNull) {
+    value = [];
   }
 
-  const values = select.multiple ? value.split(",") : [value];
+  const targetValues = Array.isArray(value) ? value : [value as string];
+  
   const options = select.options;
-  for (var i = 0; i < options.length; i++) {
+  for (let i = 0; i < options.length; i++) {
     const option = options.item(i)!;
     if (select.multiple) {
-      option.selected = values.includes(option.value);
+      option.selected = targetValues.includes(option.value);
     } else {
-      if (option.value === value) {
-      select.selectedIndex = i;
+      if (option.value === targetValues[0]) {
+        select.selectedIndex = i;
+      }
     }
   }
 }
-}
+
 function setFormFromObject(data: CatData) {
+
   isTortieCheckbox.checked = data.isTortie;
   shadingCheckbox.checked = data.shading;
   reverseCheckbox.checked = data.reverse;
@@ -188,8 +188,9 @@ function redrawCat(applyURL: boolean = true) {
   catData.whitePatchesTint = whitePatchesTintSelect.value;
   catData.eyeColour2 =
     eyeColour2Select.value === "" ? null : eyeColour2Select.value;
-  catData.whitePatches =
-    whitePatchesSelect.value === "" ? null : whitePatchesSelect.value;
+  catData.whitePatches = Array.from(whitePatchesSelect.selectedOptions)
+    .map(opt => opt.value)
+    .filter(val => val !== "");
   catData.points = pointsSelect.value === "" ? null : pointsSelect.value;
   catData.vitiligo = vitiligoSelect.value === "" ? null : vitiligoSelect.value;
   catData.accessory =

@@ -192,29 +192,36 @@ async function drawCat(
     await drawTint(tints.dilute_tint_colours[tint], "lighter", ctx);
   }
 
-  if (pelt.whitePatches !== undefined) {
-    const offscreen = new OffscreenCanvas(50, 50);
-    const offscreenContext = offscreen.getContext("2d");
+  if (pelt.whitePatches !== undefined && pelt.whitePatches.length > 0) {
+  // Create a temporary canvas to layer the patches before drawing to the main cat
+  const offscreen = new OffscreenCanvas(50, 50);
+  const offscreenContext = offscreen.getContext("2d");
+
+  if (offscreenContext) {
     const patches = pelt.whitePatches;
-      for (const patch of patches) {
-        await drawSprite(`white${patch}`, catSprite, offscreenContext);
-      }
+    
+    // Draw every selected patch onto the offscreen canvas
+    for (const patch of patches) {
+      await drawSprite(`white${patch}`, catSprite, offscreenContext);
+    }
+
+    // Apply the tint to all patches at once (mimicking Code 2's efficiency)
     if (
       pelt.whitePatchesTint !== "none" &&
-      Object.keys(whitePatchesTints.tint_colours).includes(
-        pelt.whitePatchesTint,
-      )
+      Object.keys(whitePatchesTints.tint_colours).includes(pelt.whitePatchesTint)
     ) {
-      const tint =
-        pelt.whitePatchesTint as keyof typeof whitePatchesTints.tint_colours;
+      const tintKey = pelt.whitePatchesTint as keyof typeof whitePatchesTints.tint_colours;
       await drawTint(
-        whitePatchesTints.tint_colours[tint],
+        whitePatchesTints.tint_colours[tintKey],
         "multiply",
-        offscreenContext,
+        offscreenContext
       );
     }
+
+    // Draw the final tinted patches onto the main cat context
     ctx.drawImage(offscreen, 0, 0);
   }
+}
   if (pelt.points !== undefined) {
     const offscreen = new OffscreenCanvas(50, 50);
     const offscreenContext = offscreen.getContext("2d");
