@@ -305,6 +305,17 @@ for (const randomButton of randomButtons) {
       return;
     }
     const select = getElementByUniqueClassName(selectId) as HTMLSelectElement;
+    if (selectId == "white-patches-select") {
+      for (let i = 0; i < select.options.length; i++) select.options[i].selected = false;
+      const validOptions = Array.from(select.options).filter(opt => opt.value !== "");
+      const countToSelect = Math.floor(Math.random() * 2) +1;
+      for (let i = 0; i < countToSelect; i++) {
+        const randomIndex = Math.floor(Math.random() * validOptions.length);
+        validOptions[randomIndex].selected = true;
+      }
+    } else {
+      randomizeSelected(select);
+    }
     randomizeSelected(select);
     redrawCat();
   });
@@ -369,9 +380,17 @@ getElementByUniqueClassName("randomize-all-button")?.addEventListener(
 
     if (Math.random() <= 0.5) {
       if (Math.random() <= 0.5) {
-        randomizeSelected(whitePatchesSelect);
+        for (let i = 0; i < whitePatchesSelect.options.length; i++)
+          whitePatchesSelect.options[i].selected = false;
+        const validWp = Array.from(whitePatchesSelect.options).filter(opt => opt.value !== "");
+        const countWp = Math.floor(Math.random() * 2) + 1;
+        for (let i = 0; i < countWp; i++) {
+          validWp[Math.floor(Math.random() * validWp.length)].selected = true;
+        }
       } else {
-        whitePatchesSelect.selectedIndex = 0;
+        for (let i = 0; i < whitePatchesSelect.options.length; i++) {
+          whitePatchesSelect.options[i].selected = false;
+        }
       }
       if (Math.random() <= 0.5) {
         randomizeSelected(pointsSelect);
