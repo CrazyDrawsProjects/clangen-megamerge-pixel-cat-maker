@@ -115,7 +115,7 @@ function selectByValue(select: HTMLSelectElement, value: string | null, ignoreNu
     }
   }
 }
-
+}
 function setFormFromObject(data: CatData) {
   isTortieCheckbox.checked = data.isTortie;
   shadingCheckbox.checked = data.shading;
@@ -454,4 +454,3 @@ addEventListener("popstate", () => {
 });
 
 applyDataURL();
-}

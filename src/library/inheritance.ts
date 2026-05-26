@@ -1192,20 +1192,18 @@ function inheritEyes(parents: Pelt[], child: Pelt) {
 
   // heterochromia!
   var n = 120;
-  const childPatches = child.whitePatches ? child.whitePatches : [];
   if (
-    childPatches.some(p => high_white.includes(p) ||
-    mostly_white.includes(p) ||
-    p === "FULLWHITE" ||
-    p === "WHITE"
-  )
+    child.whitePatches &&
+    child.whitePatches.some(w => [high_white, mostly_white, "FULLWHITE"].includes(w) ||
+    child.colour ==="WHITE")
   ) {
     n -= 90;
   }
-  if (childPatches.includes("FULLWHITE") || 
-  child.colour === "WHITE") {
+  if (
+    child.whitePatches && child.whitePatches.includes("FULLWHITE") ||
+    child.colour === "WHITE") {
     n -= 10;
-  }
+      }
 
   for (const parent of parents) {
     if (parent.eyeColour2) {
@@ -1225,7 +1223,8 @@ function inheritEyes(parents: Pelt[], child: Pelt) {
 
     child.eyeColour2 = choice(choice(choiceGroups));
   }
-}
+
+
 
 function inheritWhite(
   parents: Pelt[],
@@ -1267,7 +1266,7 @@ function inheritWhite(
 
     for (const p of parents) {
       if (p.whitePatches) {
-        p.whitePatches.forEach(wp => parentsWhitePatches.add(wp));
+        parentsWhitePatches.add(p.whitePatches);
       }
       if (p.points) {
         parentsPoints.push(p.points);
@@ -1287,21 +1286,26 @@ function inheritWhite(
       }
 
       if (possibleWhitePatches.size > 0) {
-        const chosen = [];
-        const possibleArr = Array.from(possibleWhitePatches.values());
-        const numToInherit = Math.random() <= 0.3 ? 2 : 1;
-        for (let j = 0; j < numToInherit; j++) {
-          if (possibleArr.length === 0) break;
-          const idx = Math.floor(Math.random() * possibleArr.length);
-          chosen.push(possibleArr.splice(idx, 1)[0]);
+        const chosenWhitePatches = new Set([choice(Array.from(possibleWhitePatches.values()))]);
+        for (let i = 0; i < 2; i++) {
+          if (Math.floor(Math.random() * 2) === 0) {
+            chosenWhitePatches.forEach((p) => possibleWhitePatches.delete(p));
+            if (possibleWhitePatches.size > 0) {
+              chosenWhitePatches.add(choice(Array.from(possibleWhitePatches.values())));
+            }
+          }
         }
-        child.whitePatches = chosen;
+        child.whitePatches = Array.from(chosenWhitePatches.values());
+      }
+
+
         if (parentsPoints.length > 0 && child.name !== "Tortie") {
           child.points = choice(parentsPoints);
         } else {
           child.points = undefined;
         }
         return;
+      }
     }
 
     var chance: number;
@@ -1361,28 +1365,55 @@ function inheritWhite(
     }
 
     const whitePatchesList = weightedChoice(whiteList, w);
-    const numPatches = Math.random() <= 0.25 ? 2 : 1;
-    const chosenPatches = [];
-    const tempWhiteList = [...whitePatchesList];
-    for (let j = 0; j < numPatches; j++) {
-      if (tempWhiteList.length === 0) break;
-      const idx = Math.floor(Math.random() * tempWhiteList.length);
-      chosenPatches.push(tempWhiteList.split(idx, 1)[0]); {
-        child.whitePatches = chosenPatches.join(",");
+    const chosenWhitePatches = new Set([choice(whitePatchesList)]);
+
+    let n = Math.floor(Math.random() * 3);
+
+    const chosenArray = Array.from(chosenWhitePatches);
+    if (chosenArray.some((w) => high_white.includes(w))) {
+      n -= 2;
+    } else if (
+      chosenArray.some((w) => little_white.includes(w)) ||
+      chosenArray.some((w) => mid_white.includes(w))
+    ) {
+      n -= 5;
+    }
+
+    parents.forEach((p) => {
+      if (p) {
+        if (!p.whitePatches || p.whitePatches.length === 0) {
+          n += 1;
+        } else if (p.whitePatches.length >= 2) {
+          n -= 1;
+        }
+      }
+    });
+
+    if (n < 0) {
+      n = 1;
+    }
+
+
+    for (let i = 0; i < 2; i++) {
+      if (Math.floor(Math.random() * (n + 1)) === 0) {
+        const weights = [12, 10, 3, 0, 0];
+        const selectedList = weightedChoice(whiteList, weights);
+        chosenWhitePatches.add(choice(selectedList));
+        n++;
       }
     }
 
+    child.whitePatches = Array.from(chosenWhitePatches);
+
     if (
       child.points &&
-      (high_white.includes(child.whitePatches) ||
-        mostly_white.includes(child.whitePatches) ||
-        child.whitePatches === "FULLWHITE")
+      (child.whitePatches.some((w) => high_white.includes(w)) ||
+        child.whitePatches.some((w) => mostly_white.includes(w)) ||
+        child.whitePatches.includes("FULLWHITE"))
     ) {
       child.points = undefined;
     }
-  }
-}
-}
+
 // doesn't include pelt length!!!
 function inheritPattern(parents: Pelt[], child: Pelt) {
   const parentPeltColours = new Set<string>();
