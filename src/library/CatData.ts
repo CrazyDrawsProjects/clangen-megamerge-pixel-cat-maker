@@ -342,33 +342,39 @@ class CatData {
   }
 
   getURL(base: string) {
-    const params = new URLSearchParams({
-      shading: this.shading.toString(),
-      reverse: this.reverse.toString(),
-      isTortie: this.isTortie.toString(),
-      backgroundColour: this.backgroundColour,
+    const params = new URLSearchParams();
 
-      tortieMask: this.tortieMask === null ? "" : this.tortieMask,
-      tortieColour: this.tortieColour === null ? "" : this.tortieColour,
-      tortiePattern: this.tortiePattern === null ? "" : this.tortiePattern,
+    params.append("shading", this.shading.toString());
+    params.append("reverse", this.reverse.toString());
+    params.append("isTortie", this.isTortie.toString());
+    params.append("backgroundColour", this.backgroundColour);
 
-      peltName: this.peltName,
-      spriteNumber: this.spriteNumber.toString(),
-      colour: this.colour,
-      tint: this.tint,
-      skinColour: this.skinColour,
-      eyeColour: this.eyeColour,
-      eyeColour2: this.eyeColour2 === null ? "" : this.eyeColour2,
-    });
-    this.whitePatches?.forEach(patch => params.append("whitePatches", patch));
-    params.append("points", this.points === null ? "" : this.points);
-    params.append("whitePatchesTint", this.whitePatchesTint);
-    params.append("vitiligo", this.vitiligo === null ? "" : this.vitiligo);
-    this.accessory?.forEach(accessory => params.append("accessory", accessory));
-    params.append("scar", scar));
-    params.append("version", "v1");
-    return new URL(`${base}?${params}`);
-  }
+    params.append("tortieMask", this.tortieMask === null ? "" : this.tortieMask);
+    params.append("tortieColour", this.tortieColour === null ? "" : this.tortieColour);
+    params.append("tortiePattern", this.tortiePattern === null ? "" : this.tortiePattern);
+
+    params.append("peltName", this.peltName);
+    params.append("spriteNumber", this.spriteNumber.toString());
+    params.append("colour", this.colour);
+    params.append("tint", this.tint);
+    params.append("skinColour", this.skinColour);
+    params.append("eyeColour", this.eyeColour);
+    params.append("eyeColour2", this.eyeColour2 === null ? "" : this.eyeColour2);
+    if (this.whitePatches) {
+      this.whitePatches.forEach(patch => params.append("whitePatches", patch));
+    }
+    params.append("points", this.points === null ? "" : this.points);
+    params.append("whitePatchesTint", this.whitePatchesTint);
+    params.append("vitiligo", this.vitiligo === null ? "" : this.vitiligo);
+    if (this.accessory) {
+      this.accessory.forEach(acc => params.append("accessory", acc));
+    }
+    if (this.scar) {
+      this.scar.forEach(s => params.append("scar", s));
+    }
+    params.append("version", "v1");
+    return new URL(`${base}?${params.toString()}`);
+  }
 
   static fromPelt(pelt: Pelt) {
     const spritesName = pelt.tortiePattern as keyof typeof spritesnameToName;
