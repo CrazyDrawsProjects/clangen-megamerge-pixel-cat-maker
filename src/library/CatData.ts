@@ -359,14 +359,14 @@ class CatData {
       skinColour: this.skinColour,
       eyeColour: this.eyeColour,
       eyeColour2: this.eyeColour2 === null ? "" : this.eyeColour2,
-      whitePatches: this.whitePatches?.forEach(patch => params.append("whitePatches", patch)),
-      points: this.points === null ? "" : this.points,
-      whitePatchesTint: this.whitePatches === null ? "" : this.whitePatchesTint,
-      vitiligo: this.vitiligo === null ? "" : this.vitiligo,
-      accessory: this.accessory?.forEach(accessory => params.append("accessory", accessory)),
-      scar: this.scar?.forEach(scar => params.append("scars", scar)),
-      version: "v1",
     });
+    this.whitePatches?.forEach(patch => params.append("whitePatches", patch));
+    params.append("points", this.points === null ? "" : this.points);
+    params.append("whitePatchesTint", this.whitePatchesTint);
+    params.append("vitiligo", this.vitiligo === null ? "" : this.vitiligo);
+    this.accessory?.forEach(accessory => params.append("accessory", accessory));
+    params.append("scar", scar));
+    params.append("version", "v1");
     return new URL(`${base}?${params}`);
   }
 
