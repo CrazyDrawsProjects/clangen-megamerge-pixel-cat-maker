@@ -232,8 +232,8 @@ class CatData {
   points: string | null;
   whitePatchesTint: string;
   vitiligo: string | null;
-  accessory: string | null;
-  scar: string | null;
+  accessory: string[];
+  scar: string[];
 
   constructor() {
     this.shading = false;
@@ -259,8 +259,8 @@ class CatData {
     this.whitePatchesTint = "none";
     this.vitiligo = null;
 
-    this.accessory = null;
-    this.scar = null;
+    this.accessory = [];
+    this.scar = [];
   }
 
   public get name(): string {
@@ -287,7 +287,7 @@ class CatData {
       points: this.points === null ? undefined : this.points,
       vitiligo: this.vitiligo === null ? undefined : this.vitiligo,
       spritesName: nameToSpritesname[peltName],
-      accessory: this.accessory === null ? undefined : this.accessory,
+      accessory: this.accessory || [],
       reverse: this.reverse,
 
       tortieBase: nameToSpritesname[peltName],
@@ -295,13 +295,16 @@ class CatData {
       tortiePattern: nameToSpritesname[tortiePattern],
       tortieColour: this.tortieColour === null ? undefined : this.tortieColour,
 
-      scars: [],
+      scars: this.scar || [],
     };
     if (this.scar) {
-      pelt["scars"] = [this.scar];
+      pelt["scars"];
     }
     if (this.whitePatches) {
       pelt["whitePatches"];
+    }
+    if (this.accessory) {
+      pelt["accessory"];
     }
 
     return pelt;
@@ -356,16 +359,17 @@ class CatData {
       skinColour: this.skinColour,
       eyeColour: this.eyeColour,
       eyeColour2: this.eyeColour2 === null ? "" : this.eyeColour2,
+      whitePatches: this.whitePatches === null ? "" : this.whitePatches.toString(),
       points: this.points === null ? "" : this.points,
       whitePatchesTint: this.whitePatches === null ? "" : this.whitePatchesTint,
       vitiligo: this.vitiligo === null ? "" : this.vitiligo,
-      accessory: this.accessory === null ? "" : this.accessory,
-      scar: this.scar === null ? "" : this.scar,
+      acessory: this.accessory === null ? "" : this.accessory.toString(),
+      scar: this.scar === null ? "" : this.scar.toString(),
       version: "v1",
     });
-    this.whitePatches?.forEach(patch => {
-      if (patch !== "") params.append("whitePatches", patch)
-    });
+    this.whitePatches?.forEach(patch => params.append("whitePatches", patch));
+    this.scar?.forEach(scar => params.append("scars", scar));
+    this.accessory?.forEach(accessory => params.append("accessory", accessory));
     return new URL(`${base}?${params}`);
   }
 
@@ -391,8 +395,9 @@ class CatData {
     catData.points = pelt.points === undefined ? null : pelt.points;
     catData.vitiligo = pelt.vitiligo === undefined ? null : pelt.vitiligo;
 
-    catData.accessory = pelt.accessory === undefined ? null : pelt.accessory;
+    catData.accessory = pelt.accessory || [];
     catData.reverse = pelt.reverse;
+    catData.scar = pelt.scars || [];
 
     catData.tortieMask = pelt.pattern === undefined ? null : pelt.pattern;
     catData.tortiePattern =
@@ -408,8 +413,8 @@ class CatData {
     const params = new URL(url).searchParams;
 
     if (params.get("version") === "v1") {
-      const scar = params.get("scar");
-      const accessory = params.get("accessory");
+      const scar = params.getAll("scar").filter(v => v !== "");
+      const accessory = params.getAll("accessory").filter(v => v !== "");
       const vitiligo = params.get("vitiligo");
       const whitePatchesTint = params.get("whitePatchesTint");
       const points = params.get("points");
@@ -516,12 +521,17 @@ class CatData {
     catData.whitePatches = ensureArray(data.white_patches);
     catData.points = data.points;
     catData.vitiligo = data.vitiligo;
-    if (Array.isArray(data.accessory)) {
-      catData.accessory = data.accessory.length === 0 ? null : data.accessory[0];
-    } else {
-      catData.accessory = data.accessory;
-    }
+    const ensureArrayy = (val: string | string[] | null) => {
+        if (!val) return [];
+        return Array.isArray(val) ? val : [val];
+    };
+    catData.accessory = ensureArrayy(data.accessory);
     catData.reverse = data.reverse;
+    const ensureArrayyy = (val: string | string[] | null) => {
+        if (!val) return [];
+        return Array.isArray(val) ? val : [val];
+    };
+    catData.scar = ensureArrayyy(data.scars);
 
     catData.tortieMask = catData.isTortie ? data.pattern : null;
     catData.tortiePattern = 

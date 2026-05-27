@@ -193,19 +193,16 @@ async function drawCat(
   }
 
   if (pelt.whitePatches !== undefined && pelt.whitePatches.length > 0) {
-  // Create a temporary canvas to layer the patches before drawing to the main cat
   const offscreen = new OffscreenCanvas(50, 50);
   const offscreenContext = offscreen.getContext("2d");
 
   if (offscreenContext) {
     const patches = pelt.whitePatches;
     
-    // Draw every selected patch onto the offscreen canvas
     for (const patch of patches) {
       await drawSprite(`white${patch}`, catSprite, offscreenContext);
     }
 
-    // Apply the tint to all patches at once (mimicking Code 2's efficiency)
     if (
       pelt.whitePatchesTint !== "none" &&
       Object.keys(whitePatchesTints.tint_colours).includes(pelt.whitePatchesTint)
@@ -218,7 +215,6 @@ async function drawCat(
       );
     }
 
-    // Draw the final tinted patches onto the main cat context
     ctx.drawImage(offscreen, 0, 0);
   }
 }
@@ -251,8 +247,9 @@ async function drawCat(
     await drawSprite(`eyes2${pelt.eyeColour2}`, catSprite, ctx);
   }
 
-  if (pelt.scars !== undefined) {
-    for (const scar of pelt.scars) {
+  if (pelt.scars !== undefined && pelt.scars.length > 0) {
+
+  for (const scar of scar) {
       if (peltInfo.scars1.includes(scar)) {
         await drawSprite(`scars${scar}`, catSprite, ctx);
       }
@@ -298,44 +295,47 @@ async function drawCat(
     }
   }
 
-  if (pelt.accessory !== undefined) {
-    if (peltInfo.plant_accessories.includes(pelt.accessory)) {
-      await drawSprite(`acc_herbs${pelt.accessory}`, catSprite, ctx);
-    } else if (peltInfo.wild_accessories.includes(pelt.accessory)) {
-      await drawSprite(`acc_wild${pelt.accessory}`, catSprite, ctx);
-    } else if (peltInfo.collars.includes(pelt.accessory)) {
-      await drawSprite(`collars${pelt.accessory}`, catSprite, ctx);
-    } else if (peltInfo.bone_accessories.includes(pelt.accessory)) {
-      await drawSprite(`acc_bones${pelt.accessory}`, catSprite, ctx);
-    } else if (peltInfo.butterflies_accessories.includes(pelt.accessory)) {
-      await drawSprite(`acc_butterflymoth${pelt.accessory}`, catSprite, ctx);
-    } else if (peltInfo.stuff_accessories.includes(pelt.accessory)) {
-      await drawSprite(`acc_twolegstuff${pelt.accessory}`, catSprite, ctx);
-    } else if (peltInfo.beetle_accessories.includes(pelt.accessory)) {
-      await drawSprite(`acc_beetle${pelt.accessory}`, catSprite, ctx);
-    } else if (peltInfo.beetle_feathers_accessories.includes(pelt.accessory)) {
-      await drawSprite(`acc_beetlefeathers${pelt.accessory}`, catSprite, ctx);
-    } else if (peltInfo.ster_accessories.includes(pelt.accessory)) {
-      await drawSprite(`acc_ster${pelt.accessory}`, catSprite, ctx);
-    } else if (peltInfo.plant2_accessories.includes(pelt.accessory)) {
-      await drawSprite(`acc_plant2${pelt.accessory}`, catSprite, ctx);
-    } else if (peltInfo.snake_accessories.includes(pelt.accessory)) {
-      await drawSprite(`acc_snake${pelt.accessory}`, catSprite, ctx);
-    } else if (peltInfo.smallanimal_accessories.includes(pelt.accessory)) {
-      await drawSprite(`acc_smallAnimal${pelt.accessory}`, catSprite, ctx);
-    } else if (peltInfo.deadinsect_accessories.includes(pelt.accessory)) {
-      await drawSprite(`acc_deadInsect${pelt.accessory}`, catSprite, ctx);
-    } else if (peltInfo.aliveinsect_accessories.includes(pelt.accessory)) {
-      await drawSprite(`acc_aliveInsect${pelt.accessory}`, catSprite, ctx);
-    } else if (peltInfo.random_accessories.includes(pelt.accessory)) {
-      await drawSprite(`acc_random${pelt.accessory}`, catSprite, ctx);
-    } else if (peltInfo.fruit_accessories.includes(pelt.accessory)) {
-      await drawSprite(`acc_fruit${pelt.accessory}`, catSprite, ctx);
-    } else if (peltInfo.sailormoon_accessories.includes(pelt.accessory)) {
-      await drawSprite(`acc_sailor${pelt.accessory}`, catSprite, ctx);
-    } else if (peltInfo.crafted_accessories.includes(pelt.accessory)) {
-      await drawSprite(`acc_crafted${pelt.accessory}`, catSprite, ctx);
-    } 
+  if (pelt.accessory !== undefined && pelt.accessory.length > 0) {
+
+  for (const accessory of accessory) {
+      if (peltInfo.plant_accessories.includes(pelt.accessory)) {
+        await drawSprite(`acc_herbs${pelt.accessory}`, catSprite, ctx);
+      } else if (peltInfo.wild_accessories.includes(pelt.accessory)) {
+        await drawSprite(`acc_wild${pelt.accessory}`, catSprite, ctx);
+      } else if (peltInfo.collars.includes(pelt.accessory)) {
+        await drawSprite(`collars${pelt.accessory}`, catSprite, ctx);
+      } else if (peltInfo.bone_accessories.includes(pelt.accessory)) {
+        await drawSprite(`acc_bones${pelt.accessory}`, catSprite, ctx);
+      } else if (peltInfo.butterflies_accessories.includes(pelt.accessory)) {
+        await drawSprite(`acc_butterflymoth${pelt.accessory}`, catSprite, ctx);
+      } else if (peltInfo.stuff_accessories.includes(pelt.accessory)) {
+        await drawSprite(`acc_twolegstuff${pelt.accessory}`, catSprite, ctx);
+      } else if (peltInfo.beetle_accessories.includes(pelt.accessory)) {
+        await drawSprite(`acc_beetle${pelt.accessory}`, catSprite, ctx);
+      } else if (peltInfo.beetle_feathers_accessories.includes(pelt.accessory)) {
+        await drawSprite(`acc_beetlefeathers${pelt.accessory}`, catSprite, ctx);
+      } else if (peltInfo.ster_accessories.includes(pelt.accessory)) {
+        await drawSprite(`acc_ster${pelt.accessory}`, catSprite, ctx);
+      } else if (peltInfo.plant2_accessories.includes(pelt.accessory)) {
+        await drawSprite(`acc_plant2${pelt.accessory}`, catSprite, ctx);
+      } else if (peltInfo.snake_accessories.includes(pelt.accessory)) {
+        await drawSprite(`acc_snake${pelt.accessory}`, catSprite, ctx);
+      } else if (peltInfo.smallanimal_accessories.includes(pelt.accessory)) {
+        await drawSprite(`acc_smallAnimal${pelt.accessory}`, catSprite, ctx);
+      } else if (peltInfo.deadinsect_accessories.includes(pelt.accessory)) {
+        await drawSprite(`acc_deadInsect${pelt.accessory}`, catSprite, ctx);
+      } else if (peltInfo.aliveinsect_accessories.includes(pelt.accessory)) {
+        await drawSprite(`acc_aliveInsect${pelt.accessory}`, catSprite, ctx);
+      } else if (peltInfo.random_accessories.includes(pelt.accessory)) {
+        await drawSprite(`acc_random${pelt.accessory}`, catSprite, ctx);
+      } else if (peltInfo.fruit_accessories.includes(pelt.accessory)) {
+        await drawSprite(`acc_fruit${pelt.accessory}`, catSprite, ctx);
+      } else if (peltInfo.sailormoon_accessories.includes(pelt.accessory)) {
+        await drawSprite(`acc_sailor${pelt.accessory}`, catSprite, ctx);
+      } else if (peltInfo.crafted_accessories.includes(pelt.accessory)) {
+        await drawSprite(`acc_crafted${pelt.accessory}`, catSprite, ctx);
+      }
+      }
   }
 
   outCtx.clearRect(0, 0, outCanvas.width, outCanvas.height);

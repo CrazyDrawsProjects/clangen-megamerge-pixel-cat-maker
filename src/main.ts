@@ -194,8 +194,13 @@ function redrawCat(applyURL: boolean = true) {
   catData.points = pointsSelect.value === "" ? null : pointsSelect.value;
   catData.vitiligo = vitiligoSelect.value === "" ? null : vitiligoSelect.value;
   catData.accessory =
-    accessorySelect.value === "" ? null : accessorySelect.value;
-  catData.scar = scarSelect.value === "" ? null : scarSelect.value;
+    Array.from(accessorySelect.selectedOptions)
+    .map(opt => opt.value)
+    .filter(val => val !== "");
+  catData.scar =
+    Array.from(scarSelect.selectedOptions)
+    .map(opt => opt.value)
+    .filter(val => val !== "");
   catData.shading = shadingCheckbox.checked;
   catData.reverse = reverseCheckbox.checked;
 
