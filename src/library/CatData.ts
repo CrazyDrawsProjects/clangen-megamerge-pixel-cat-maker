@@ -367,9 +367,6 @@ class CatData {
       scar: this.scar === null ? "" : this.scar.toString(),
       version: "v1",
     });
-    this.whitePatches?.forEach(patch => params.append("whitePatches", patch));
-    this.scar?.forEach(scar => params.append("scars", scar));
-    this.accessory?.forEach(accessory => params.append("accessory", accessory));
     return new URL(`${base}?${params}`);
   }
 
