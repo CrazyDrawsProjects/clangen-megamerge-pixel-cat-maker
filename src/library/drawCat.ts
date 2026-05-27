@@ -193,31 +193,34 @@ async function drawCat(
   }
 
   if (pelt.whitePatches !== undefined && pelt.whitePatches.length > 0) {
-  const offscreen = new OffscreenCanvas(50, 50);
-  const offscreenContext = offscreen.getContext("2d");
+    const offscreen = new OffscreenCanvas(50, 50);
+    const offscreenContext = offscreen.getContext("2d");
 
-  if (offscreenContext) {
-    const patches = pelt.whitePatches;
-    
-    for (const patch of patches) {
-      await drawSprite(`white${patch}`, catSprite, offscreenContext);
+    if (offscreenContext) {
+      const patches = pelt.whitePatches;
+
+      for (const patch of patches) {
+        await drawSprite(`white${patch}`, catSprite, offscreenContext);
+      }
+
+      if (
+        pelt.whitePatchesTint !== "none" &&
+        Object.keys(whitePatchesTints.tint_colours).includes(
+          pelt.whitePatchesTint,
+        )
+      ) {
+        const tintKey =
+          pelt.whitePatchesTint as keyof typeof whitePatchesTints.tint_colours;
+        await drawTint(
+          whitePatchesTints.tint_colours[tintKey],
+          "multiply",
+          offscreenContext,
+        );
+      }
+
+      ctx.drawImage(offscreen, 0, 0);
     }
-
-    if (
-      pelt.whitePatchesTint !== "none" &&
-      Object.keys(whitePatchesTints.tint_colours).includes(pelt.whitePatchesTint)
-    ) {
-      const tintKey = pelt.whitePatchesTint as keyof typeof whitePatchesTints.tint_colours;
-      await drawTint(
-        whitePatchesTints.tint_colours[tintKey],
-        "multiply",
-        offscreenContext
-      );
-    }
-
-    ctx.drawImage(offscreen, 0, 0);
   }
-}
   if (pelt.points !== undefined) {
     const offscreen = new OffscreenCanvas(50, 50);
     const offscreenContext = offscreen.getContext("2d");
@@ -255,7 +258,6 @@ async function drawCat(
     }
   }
 
-
   if (shading) {
     await drawShading(catSprite, ctx);
   }
@@ -291,7 +293,6 @@ async function drawCat(
       }
     }
   }
-
 
   if (pelt.accessory && pelt.accessory.length > 0) {
     for (const acc of pelt.accessory) {
@@ -332,8 +333,8 @@ async function drawCat(
       } else if (peltInfo.crafted_accessories.includes(acc)) {
         await drawSprite(`acc_crafted${acc}`, catSprite, ctx);
       }
-    };
-
+    }
+  }
 
   outCtx.clearRect(0, 0, outCanvas.width, outCanvas.height);
   if (pelt.reverse) {
@@ -343,7 +344,6 @@ async function drawCat(
   } else {
     outCtx.drawImage(canvas, 0, 0);
   }
-}
 }
 
 export default drawCat;
