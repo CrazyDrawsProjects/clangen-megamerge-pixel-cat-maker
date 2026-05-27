@@ -345,4 +345,5 @@ async function drawCat(
   }
 }
 }
+
 export default drawCat;
